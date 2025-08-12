@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>40 Vakit Namaz Takip</title>
+<style>
+  body {
+    background-color: #7A7A7A;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    color: #FFFFFF;
+  }
+  header {
+    position: relative;
+    text-align: center;
+    padding: 0;
+  }
+  #headerImg {
+    width: 100%;
+    height: auto;
+    border-radius: 0 0 10px 10px;
+    display: block;
+  }
+  .info-card {
+    background-color: #1B4F4C;
+    border-radius: 10px;
+    margin: 10px auto 20px auto;
+    padding: 12px 20px;
+    max-width: 400px;
+    color: #FFFFFF;
+    font-weight: 600;
+    font-size: 1.1rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    display: flex;
+    justify-content: space-between;
+    user-select: none;
+  }
+  .container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+    padding: 20px;
+  }
+  .card {
+    background-color: #27736E;
+    padding: 15px;
+    border-radius: 12px;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.3s;
+    font-size: 1rem;
+  }
+  .card:hover {
+    background-color: #2D8C85;
+    transform: scale(1.05);
+  }
+  .card.completed {
+    background-color: #1B4F4C;
+    box-shadow: inset 0px 0px 10px #000000;
+  }
+  .info {
+    font-size: 0.85em;
+    margin-top: 5px;
+    opacity: 0.85;
+  }
+  .reset-container {
+    text-align: center;
+    padding: 20px;
+  }
+  .reset-btn {
+    background-color: #bb2323;
+    color: #FFFFFF;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s, transform 0.2s;
+  }
+  .reset-btn:hover {
+    background-color: #990000;
+    transform: scale(1.05);
+  }
+  /* Modal */
+  .modal {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    z-index: 1000;
+  }
+  .modal-content {
+    background: #27736E;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    max-width: 350px;
+    width: 100%;
+  }
+  .vakit-btn {
+    background: #2D8C85;
+    border: none;
+    color: white;
+    padding: 10px 18px;
+    margin: 6px;
+    border-radius: 8px;
+    cursor: default;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+    user-select: none;
+  }
+  .vakit-btn:hover {
+    background-color: #36A49E;
+  }
+  input[type="date"] {
+    padding: 8px;
+    font-size: 1rem;
+    border-radius: 6px;
+    border: none;
+    outline: none;
+  }
+  @media (max-width: 600px) {
+    .container {
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    }
+    .card {
+      padding: 18px;
+      font-size: 1.1rem;
+    }
+    .info {
+      font-size: 0.9rem;
+    }
+    .reset-btn {
+      font-size: 1.1rem;
+      padding: 14px 28px;
+    }
+    .vakit-btn {
+      font-size: 1.1rem;
+      padding: 12px 20px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- Karşılama Modal -->
+<div class="modal" id="welcomeModal">
+  <div class="modal-content" style="max-width: 500px;">
+    <p style="font-size: 1.1rem; line-height: 1.4; text-align: justify; direction: rtl;">
+      قال النبي صلى الله عليه وسلم : من صلى في مسجدي أربعين صلاة لا يفوته صلاة، كتبت له براءة من النار ونجاة من العذاب، وبرئ من النفاق
+    </p>
+    <hr style="border-color: rgba(255,255,255,0.3);">
+    <p style="font-size: 1rem; line-height: 1.4; text-align: justify; direction: ltr;">
+      “Kim, bir tek vakit kaçırmaksızın (peşpeşe), benim mescidimde 40 vakit namaz kılarsa, ona cehennem ateşinden beraat ve azaptan kurtuluş yazılır. Ve o, nifaktan uzak olur.” 
+      <br>(Ahmed İbni Hanbel, el-Müsned, III, 155; Taberânî, el-Evsat, VI,210; No.5540)
+    </p>
+    <br>
+    <button id="welcomeContinueBtn" style="
+      background-color: #2D8C85;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      color: white;
+      font-size: 1rem;
+      cursor: pointer;
+    ">
+      Devam
+    </button>
+  </div>
+</div>
+
+<header>
+  <img id="headerImg" src="" alt="Mescid-i Nebevi">
+  <div class="info-card" id="infoCard">
+    <div>Kılınan vakit: <span id="doneCount">0</span></div>
+    <div>Kalan vakit: <span id="remainingCount">40</span></div>
+  </div>
+  <h1>Mescid-i Nebevi'de 40 Vakit Namaz Takibi</h1>
+</header>
+
+<div class="container" id="cardContainer"></div>
+
+<div class="reset-container">
+  <button class="reset-btn" onclick="resetAll()">Sıfırla</button>
+</div>
+
+<p style="font-size: 0.8rem; color: rgba(255,255,255,0.6); margin-top: 10px; text-align: center;">
+  İletişim: <a href="mailto:infoapps34@gmail.com" style="color: rgba(255,255,255,0.6); text-decoration: none;">infoapps34@gmail.com</a>
+</p>
+
+<!-- Başlangıç seçim ekranı -->
+<div class="modal" id="startModal" style="display:none;">
+  <div class="modal-content">
+    <h3>Başlangıç Bilgileri</h3>
+    <label>Başlangıç Günü:</label><br>
+    <input type="date" id="startDate"><br><br>
+    <label>Başlangıç Vakti:</label><br>
+    <div id="vakitButtons"></div>
+  </div>
+</div>
+
+<script>
+  const photo1 = 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/11/a8/5e/e4/masjid-al-nabvi.jpg?w=900&h=-1&s=1';
+  const photo2 = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQECw4biYL-a_1jzV1WgTDBK-xY6de5l3z_Sg&s';
+  const imgEl = document.getElementById('headerImg');
+
+  function updateHeaderImage() {
+    const hour = new Date().getHours();
+    imgEl.src = (hour >= 6 && hour < 18) ? photo1 : photo2;
+  }
+  updateHeaderImage();
+  setInterval(updateHeaderImage, 60 * 1000); 
+
+  const cardContainer = document.getElementById('cardContainer');
+  const startModal = document.getElementById('startModal');
+  const vakitButtonsDiv = document.getElementById('vakitButtons');
+  const doneCountSpan = document.getElementById('doneCount');
+  const remainingCountSpan = document.getElementById('remainingCount');
+
+  let startDay = localStorage.getItem('startDay');
+  let startVakit = localStorage.getItem('startVakit');
+  let completed = JSON.parse(localStorage.getItem('completed') || "[]");
+  const vakitler = ["Sabah", "Öğle", "İkindi", "Akşam", "Yatsı"];
+
+  vakitler.forEach(v => {
+    const btn = document.createElement("button");
+    btn.textContent = v;
+    btn.className = "vakit-btn";
+    btn.onclick = () => selectStart(v);
+    vakitButtonsDiv.appendChild(btn);
+  });
+
+  function createCards() {
+    cardContainer.innerHTML = "";
+    for (let i = 1; i <= 40; i++) {
+      const card = document.createElement('div');
+      card.classList.add('card');
+      if (completed.includes(i)) card.classList.add('completed');
+      card.innerHTML = `<div>${i}. Vakit</div><div class="info">${startDay && startVakit ? getCardInfo(i) : ""}</div>`;
+      card.addEventListener('click', () => markCard(i, card));
+      cardContainer.appendChild(card);
+    }
+    updateInfoCard();
+  }
+
+  function updateInfoCard() {
+    const done = completed.length;
+    doneCountSpan.textContent = done;
+    remainingCountSpan.textContent = 40 - done;
+  }
+
+  function getCardInfo(index) {
+    const startIndex = vakitler.indexOf(startVakit);
+    const total = startIndex + (index - 1);
+    const dayOffset = Math.floor(total / 5);
+    const vakitIndex = total % 5;
+    const date = new Date(startDay);
+    date.setDate(date.getDate() + dayOffset);
+    return `${date.toLocaleDateString("tr-TR")} - ${vakitler[vakitIndex]}`;
+  }
+
+  function markCard(i, card) {
+    if (!startDay) {
+      startModal.style.display = "flex";
+      return;
+    }
+    if (completed.includes(i)) completed = completed.filter(num => num !== i);
+    else completed.push(i);
+    localStorage.setItem('completed', JSON.stringify(completed));
+    updateInfoCard();
+    card.classList.toggle('completed');
+  }
+
+  function selectStart(vakit) {
+    const dateValue = document.getElementById("startDate").value;
+    if (!dateValue) return alert("Lütfen başlangıç günü seçin");
+    startDay = dateValue;
+    startVakit = vakit;
+    localStorage.setItem('startDay', startDay);
+    localStorage.setItem('startVakit', startVakit);
+    startModal.style.display = "none";
+    createCards();
+  }
+
+  function resetAll() {
+    if (!confirm("Tüm işaretlemeler ve bilgiler silinsin mi?")) return;
+    localStorage.clear();
+    startDay = startVakit = null;
+    completed = [];
+    createCards();
+  }
+
+  // Karşılama ekranı kontrolü
+  const welcomeModal = document.getElementById('welcomeModal');
+  const welcomeContinueBtn = document.getElementById('welcomeContinueBtn');
+
+  window.addEventListener('load', () => {
+    welcomeModal.style.display = "flex";
+  });
+
+  welcomeContinueBtn.addEventListener('click', () => {
+    welcomeModal.style.display = "none";
+  });
+
+  createCards();
+</script>
+
+</body>
+</html>
